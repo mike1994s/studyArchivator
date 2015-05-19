@@ -1,0 +1,26 @@
+Time for readByteByByte= 00:00:00.76
+Time for fillHeap= 00:00:00.00
+Time for huffman= 00:00:00.00
+Time for fillWeights= 00:00:00.00
+Time for createArchive= 00:00:27.71
+
+
+
+createArchive 
+Time for WriteTreeInArchive = 0;
+Time for getCountExtraByte= 00:00:23.47
+
+
+
+
+разархивирование 
+
+readHeap 00:00:00.00
+  huffman = 00:00:00.00
+  RunTime  huffman = 00:00:00.00
+RunTime  getFileNameFromNameArchive = 00:00:00.00
+RunTime  transformArchiveToFile = 00:00:18.10
+RunTime  getRestSymbolsAndFillArrayString = 00:00:12.30
+
+
+

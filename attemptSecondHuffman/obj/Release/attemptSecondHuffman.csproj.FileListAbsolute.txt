@@ -1,0 +1,9 @@
+D:\учёба\университет\6семестр\ПП\RGR\3\attemptSecondHuffman_v1\tryBit\attemptSecondHuffman\attemptSecondHuffman\bin\Release\attemptSecondHuffman.exe.config
+D:\учёба\университет\6семестр\ПП\RGR\3\attemptSecondHuffman_v1\tryBit\attemptSecondHuffman\attemptSecondHuffman\bin\Release\attemptSecondHuffman.exe
+D:\учёба\университет\6семестр\ПП\RGR\3\attemptSecondHuffman_v1\tryBit\attemptSecondHuffman\attemptSecondHuffman\bin\Release\attemptSecondHuffman.pdb
+D:\учёба\университет\6семестр\ПП\RGR\3\attemptSecondHuffman_v1\tryBit\attemptSecondHuffman\attemptSecondHuffman\obj\Release\attemptSecondHuffman.csprojResolveAssemblyReference.cache
+D:\учёба\университет\6семестр\ПП\RGR\3\attemptSecondHuffman_v1\tryBit\attemptSecondHuffman\attemptSecondHuffman\obj\Release\attemptSecondHuffman.Form1.resources
+D:\учёба\университет\6семестр\ПП\RGR\3\attemptSecondHuffman_v1\tryBit\attemptSecondHuffman\attemptSecondHuffman\obj\Release\attemptSecondHuffman.Properties.Resources.resources
+D:\учёба\университет\6семестр\ПП\RGR\3\attemptSecondHuffman_v1\tryBit\attemptSecondHuffman\attemptSecondHuffman\obj\Release\attemptSecondHuffman.csproj.GenerateResource.Cache
+D:\учёба\университет\6семестр\ПП\RGR\3\attemptSecondHuffman_v1\tryBit\attemptSecondHuffman\attemptSecondHuffman\obj\Release\attemptSecondHuffman.exe
+D:\учёба\университет\6семестр\ПП\RGR\3\attemptSecondHuffman_v1\tryBit\attemptSecondHuffman\attemptSecondHuffman\obj\Release\attemptSecondHuffman.pdb

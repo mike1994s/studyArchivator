@@ -1,0 +1,15 @@
+symbol b has code =  00
+symbol ! has code =  0100
+symbol r has code =  0101
+symbol   has code =  011
+symbol o has code =  100
+symbol p has code =  101
+symbol e has code =  11
+00111110
+10110010
+01001010
+11001111
+01010100
+
+
+"11001111"
