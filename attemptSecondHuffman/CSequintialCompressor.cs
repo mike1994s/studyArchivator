@@ -5,14 +5,14 @@ using System.Text;
 using System.Threading.Tasks;
 using System.IO;
 using System.Diagnostics;
+using System.Windows.Forms;
 
 namespace attemptSecondHuffman
 {
     public class CSequintialCompressor : ICompressor
     {
         private FileStream m_fileStream;
-
-        public void createArchive(ref String m_fileName, ref Dictionary<int, string> weights, ref CHeap m_heap)
+        public void createArchive(ref String m_fileName, ref Dictionary<int, string> weights, ref CHeap m_heap, ref List<IObservebale> list)
         {
             FileStream archive = new FileStream(m_fileName + ".lema", FileMode.Create); 
             StreamWriter writerArchive = new StreamWriter(archive);
@@ -20,11 +20,20 @@ namespace attemptSecondHuffman
             m_fileStream = new FileStream(m_fileName, FileMode.Open, FileAccess.Read, FileShare.Read);
             List<String> a = new List<string>();
             int countSymbols = 0;
-            int rest = getCountExtraByte(ref m_fileName, ref weights, a, ref m_fileStream,ref countSymbols);
+            
+            
+            int rest = getCountExtraByte(ref m_fileName, ref weights, a, ref m_fileStream,ref countSymbols, ref list);
             writerArchive.BaseStream.WriteByte((byte)rest);
             byte[] bytes = BitConverter.GetBytes(countSymbols);
             writerArchive.BaseStream.Write(bytes, 0, bytes.Length);
-            transform(ref m_fileName, ref weights, ref writerArchive, rest);
+            //progressBar.Value = 0;
+            //progressBar.Maximum = countSymbols;
+            for (int i = 0; i < list.Count(); ++i)
+            {
+                list[i].onStart(countSymbols);
+            }
+            transform(ref m_fileName, ref weights, ref writerArchive, rest, ref list);
+            //progressBar.Value = progressBar.Maximum;
             writerArchive.Close();
             archive.Close();
         }
@@ -44,7 +53,7 @@ namespace attemptSecondHuffman
             return str;
         }
 
-        private int getCountExtraByte(ref String m_fileName, ref Dictionary<int, string> weights, List<String> arr, ref FileStream fStream, ref int countSymbols)
+        private int getCountExtraByte(ref String m_fileName, ref Dictionary<int, string> weights, List<String> arr, ref FileStream fStream, ref int countSymbols, ref List<IObservebale> list)
         {
             StreamReader sr = new StreamReader(fStream);
             string lines = string.Empty;
@@ -52,6 +61,7 @@ namespace attemptSecondHuffman
             countSymbols++;
             String bufferEightSymbols = String.Empty;
             String restSymbols = String.Empty;
+         
             while (one != -1)
             {
                 int sym = one;
@@ -65,6 +75,7 @@ namespace attemptSecondHuffman
                     }
                     restSymbols += value;
                 }
+                //prBar.Maximum++;
                 countSymbols++;
                 one = sr.BaseStream.ReadByte();
             }
@@ -115,7 +126,7 @@ namespace attemptSecondHuffman
             }
         }
 
-        private void transform(ref String m_fileName, ref Dictionary<int, string> weights, ref StreamWriter writerArchive, int rest)
+        private void transform(ref String m_fileName, ref Dictionary<int, string> weights, ref StreamWriter writerArchive, int rest, ref List<IObservebale> list)
         {
             m_fileStream = new FileStream(m_fileName, FileMode.Open, FileAccess.Read, FileShare.Read);
             StreamReader sr = new StreamReader(m_fileStream);
@@ -137,7 +148,11 @@ namespace attemptSecondHuffman
                     }
                     restSymbols += value;
                 }
-                one = sr.BaseStream.ReadByte();
+                for (int i = 0; i < list.Count(); ++i)
+                {
+                    list[i].onIncrement();
+                }
+                 one = sr.BaseStream.ReadByte();
             }
             if (rest > 0)
             {
@@ -148,6 +163,10 @@ namespace attemptSecondHuffman
                 byte res = 0;
                 res = Convert.ToByte(getEightSymbols(ref restSymbols), 2);
                 writerArchive.BaseStream.WriteByte((byte)res);
+            }
+            for (int i = 0; i < list.Count(); ++i)
+            {
+                list[i].onFinish() ;
             }
             sr.Close();
             m_fileStream.Close();

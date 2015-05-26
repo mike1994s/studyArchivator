@@ -47,6 +47,7 @@
     <Compile Include="AHeapPriority.cs" />
     <Compile Include="AWorkFlow.cs" />
     <Compile Include="CAlgoritmMinHeap.cs" />
+    <Compile Include="CProgressObserve.cs" />
     <Compile Include="CHeap.cs" />
     <Compile Include="CLeaf.cs" />
     <Compile Include="CNode.cs" />
@@ -63,6 +64,7 @@
     </Compile>
     <Compile Include="Helper.cs" />
     <Compile Include="ICompressor.cs" />
+    <Compile Include="IObservebale.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="Form1.resx">

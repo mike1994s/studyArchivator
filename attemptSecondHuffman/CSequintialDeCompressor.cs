@@ -5,6 +5,8 @@ using System.Text;
 using System.Threading.Tasks;
 using System.IO;
 using System.Diagnostics;
+using System.Windows.Forms;
+
 namespace attemptSecondHuffman
 {
     public class CSequintialDeCompressor : IDecompressor
@@ -66,7 +68,7 @@ namespace attemptSecondHuffman
             return rest;
         }
 
-        public void transformArchiveToFile(ref CNode rootTree, String outFileName, ref  StreamReader readerArchive)
+        public void transformArchiveToFile(ref CNode rootTree, String outFileName, ref  StreamReader readerArchive )
         {
             FileStream file1 = new FileStream("test1.txt", FileMode.Create); //создаем файловый поток
             StreamWriter writer = new StreamWriter(file1);
@@ -79,6 +81,8 @@ namespace attemptSecondHuffman
             int rest = getRestSymbols(ref readerArchive, arr, ref counSymbols);
             int one = readerArchive.BaseStream.ReadByte();
             int cnt = 1;
+            //prBar.Value = 0;
+            //prBar.Maximum = counSymbols;
             while (one != -1)
             {
                 String res = Convert.ToString(one, 2);

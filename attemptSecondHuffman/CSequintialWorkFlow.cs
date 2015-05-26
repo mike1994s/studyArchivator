@@ -5,13 +5,15 @@ using System.Text;
 using System.Threading.Tasks;
 using System.IO;
 using System.Collections;
+using System.Windows.Forms;
+
 namespace attemptSecondHuffman
 {
     class CSequintialWorkFlow : AWorkFlow
     {
 
-        public CSequintialWorkFlow(AHeapPriority heapPriority, string fileName, AWorkFlow.Scenario scenario)
-            : base(heapPriority, fileName, scenario)
+        public CSequintialWorkFlow(AHeapPriority heapPriority, string fileName, AWorkFlow.Scenario scenario,  List<IObservebale> observs)
+            : base(heapPriority, fileName, scenario, observs)
         {
 
         }

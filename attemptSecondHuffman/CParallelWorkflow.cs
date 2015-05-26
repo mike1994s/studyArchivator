@@ -3,13 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-
+using System.Windows.Forms;
 namespace attemptSecondHuffman
 {
     class CParallelWorkflow : AWorkFlow
     {
-        public CParallelWorkflow(AHeapPriority heapPriority, string fileName, AWorkFlow.Scenario scenario)
-            : base(heapPriority, fileName, scenario)
+        public CParallelWorkflow(AHeapPriority heapPriority, string fileName, AWorkFlow.Scenario scenario, List<IObservebale> observs)
+            : base(heapPriority, fileName, scenario, observs)
         {
 
         }

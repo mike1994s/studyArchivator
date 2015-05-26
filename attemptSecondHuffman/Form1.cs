@@ -32,6 +32,7 @@ namespace attemptSecondHuffman
                 }
                 textBox1.Text = filePath;
             }
+            
         }
 
         private void button2_Click(object sender, EventArgs e)
@@ -43,6 +44,7 @@ namespace attemptSecondHuffman
             }
             priority = new CAlgoritmMinHeap();
             AWorkFlow.Scenario scenario;
+            progressBar1.Maximum = 10;
             if (!textBox1.Text.ToString().Contains(".lema"))
             {
                 scenario = AWorkFlow.Scenario.Compress;
@@ -51,7 +53,13 @@ namespace attemptSecondHuffman
             {
                 scenario = AWorkFlow.Scenario.DeCompress;
             }
-            workingFlow = new CSequintialWorkFlow(priority, textBox1.Text.ToString(), scenario);
+            List<IObservebale> observs = new List<IObservebale>();
+            CProgressObserve commonObserv = new CProgressObserve(ref progressBar1);
+            CProgressObserve loaderObservable = new CProgressObserve(ref progressBar2);
+            observs.Add(commonObserv);
+            observs.Add(loaderObservable);
+
+            workingFlow = new CSequintialWorkFlow(priority, textBox1.Text.ToString(), scenario, observs);
             try
             {
                 workingFlow.run();
@@ -60,6 +68,44 @@ namespace attemptSecondHuffman
             {
                 MessageBox.Show(error.Message);
             }
+        }
+
+        private void backgroundWorker1_DoWork(object sender, DoWorkEventArgs e)
+        {
+            if (String.IsNullOrEmpty(textBox1.Text.ToString()) ||
+             String.IsNullOrWhiteSpace(textBox1.Text.ToString()))
+            {
+                MessageBox.Show("Выберите файл");
+            }
+            priority = new CAlgoritmMinHeap();
+            AWorkFlow.Scenario scenario;
+            List<IObservebale> observs = new List<IObservebale>();
+            CProgressObserve commonObserv = new CProgressObserve(ref progressBar1);
+            CProgressObserve loaderObservable = new CProgressObserve(ref progressBar2);
+            observs.Add(commonObserv);
+            observs.Add(loaderObservable);
+            if (!textBox1.Text.ToString().Contains(".lema"))
+            {
+                scenario = AWorkFlow.Scenario.Compress;
+            }
+            else
+            {
+                scenario = AWorkFlow.Scenario.DeCompress;
+            }
+            workingFlow = new CSequintialWorkFlow(priority, textBox1.Text.ToString(), scenario, observs);
+            try
+            {
+                workingFlow.run();
+            }
+            catch (Exception error)
+            {
+                MessageBox.Show(error.Message);
+            }
+        }
+
+        private void button3_Click(object sender, EventArgs e)
+        {
+            backgroundWorker1.RunWorkerAsync();
         }
     }
 }

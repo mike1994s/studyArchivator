@@ -5,7 +5,8 @@ using System.Text;
 using System.Threading.Tasks;
 using System.IO;
 using System.Diagnostics;
-/// current version
+using System.Windows.Forms;
+
 namespace attemptSecondHuffman
 {
     abstract class AWorkFlow
@@ -15,7 +16,6 @@ namespace attemptSecondHuffman
             Compress,
             DeCompress
         };
-
         protected ICompressor m_compressor;
         protected IDecompressor m_decompressor;
         protected Scenario m_scenario; 
@@ -25,10 +25,12 @@ namespace attemptSecondHuffman
         protected StreamWriter writer;
         protected AHeapPriority m_algorithmHeap;
         private CHeap m_heap = new CHeap();
-        protected FileStream m_fileStream; 
-        
-        public AWorkFlow(AHeapPriority heapPriority, string fileName, Scenario scenario)
+        protected FileStream m_fileStream;
+        private List<IObservebale> m_obs;
+        private List<IObservebale> m_obsToSend;
+        public AWorkFlow(AHeapPriority heapPriority, string fileName, Scenario scenario, List < IObservebale > observs)
         {
+            m_obs = observs;
             m_scenario = scenario;
             writer = new StreamWriter(file1); //создаем «потоковый писатель» и связываем его с файловым потоком
             m_algorithmHeap = heapPriority;
@@ -40,6 +42,11 @@ namespace attemptSecondHuffman
             }
             m_heap.heapSize = -1;
             rootTree = new CNode();
+            m_obsToSend = new List<IObservebale>();
+            for (int i = 1; i < observs.Count(); ++i)
+            {
+                m_obsToSend.Add(observs[i]);
+            }
         }
       
         public AWorkFlow(string fileName)
@@ -69,12 +76,18 @@ namespace attemptSecondHuffman
         private void compress(){
            Dictionary<int, string> weights = new Dictionary<int, string>();
             int []arr = new int[256];
+            m_obs[0].onStart(5);
             m_compressor.readByteByByte(ref m_fileName, ref arr);
+            m_obs[0].onIncrement();
             fillHeap(ref arr, ref m_heap);
+            m_obs[0].onIncrement();
             huffman(m_heap, ref rootTree);
+            m_obs[0].onIncrement();
             fillWeights(rootTree, "", ref weights);
+            m_obs[0].onIncrement();
             rootTree = null;
-            m_compressor.createArchive(ref m_fileName, ref weights, ref m_heap);
+            m_compressor.createArchive(ref m_fileName, ref weights, ref m_heap, ref m_obsToSend);
+            m_obs[0].onFinish();
         }
 
 
@@ -88,17 +101,13 @@ namespace attemptSecondHuffman
             m_fileStream = new FileStream(m_fileName, FileMode.Open, FileAccess.Read, FileShare.Read);
             StreamReader sr = new StreamReader(m_fileStream);
             m_decompressor.readHeap(ref m_heap, ref sr);
+            
             huffman(m_heap, ref rootTree);
 
-            
             fillWeights(rootTree, "", ref weights);
+
             String outFileName = Helper.getFileNameFromNameArchive(m_fileName);
-
-            
-
-                m_decompressor.transformArchiveToFile(ref rootTree, outFileName, ref sr);
-
-             
+            m_decompressor.transformArchiveToFile(ref rootTree, outFileName, ref sr );
             sr.Close();
             m_fileStream.Close();
         }
