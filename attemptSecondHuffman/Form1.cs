@@ -53,13 +53,7 @@ namespace attemptSecondHuffman
             {
                 scenario = AWorkFlow.Scenario.DeCompress;
             }
-            List<IObservebale> observs = new List<IObservebale>();
-            CProgressObserve commonObserv = new CProgressObserve(ref progressBar1);
-            CProgressObserve loaderObservable = new CProgressObserve(ref progressBar2);
-            observs.Add(commonObserv);
-            observs.Add(loaderObservable);
-
-            workingFlow = new CSequintialWorkFlow(priority, textBox1.Text.ToString(), scenario, observs);
+            workingFlow = new CSequintialWorkFlow(priority, textBox1.Text.ToString(), scenario);
             try
             {
                 workingFlow.run();
@@ -79,20 +73,16 @@ namespace attemptSecondHuffman
             }
             priority = new CAlgoritmMinHeap();
             AWorkFlow.Scenario scenario;
-            List<IObservebale> observs = new List<IObservebale>();
-            CProgressObserve commonObserv = new CProgressObserve(ref progressBar1);
-            CProgressObserve loaderObservable = new CProgressObserve(ref progressBar2);
-            observs.Add(commonObserv);
-            observs.Add(loaderObservable);
+         
             if (!textBox1.Text.ToString().Contains(".lema"))
             {
                 scenario = AWorkFlow.Scenario.Compress;
             }
             else
             {
-                scenario = AWorkFlow.Scenario.DeCompress;
+                scenario = AWorkFlow.Scenario.DeCompress ;
             }
-            workingFlow = new CSequintialWorkFlow(priority, textBox1.Text.ToString(), scenario, observs);
+            workingFlow = new CSequintialWorkFlow(priority, textBox1.Text.ToString(), scenario);
             try
             {
                 workingFlow.run();

@@ -47,13 +47,13 @@
     <Compile Include="AHeapPriority.cs" />
     <Compile Include="AWorkFlow.cs" />
     <Compile Include="CAlgoritmMinHeap.cs" />
-    <Compile Include="CProgressObserve.cs" />
     <Compile Include="CHeap.cs" />
     <Compile Include="CLeaf.cs" />
     <Compile Include="CNode.cs" />
     <Compile Include="CParallelWorkflow.cs" />
     <Compile Include="CSequintialCompressor.cs" />
     <Compile Include="CSequintialDeCompressor.cs" />
+    <Compile Include="CSequintialHuffman.cs" />
     <Compile Include="CSequintialWorkFlow.cs" />
     <Compile Include="IDecompressor.cs" />
     <Compile Include="Form1.cs">
@@ -64,7 +64,7 @@
     </Compile>
     <Compile Include="Helper.cs" />
     <Compile Include="ICompressor.cs" />
-    <Compile Include="IObservebale.cs" />
+    <Compile Include="IHuffman.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="Form1.resx">

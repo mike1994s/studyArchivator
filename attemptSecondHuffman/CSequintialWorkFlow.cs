@@ -4,16 +4,17 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.IO;
-using System.Collections;
+using System.Diagnostics;
 using System.Windows.Forms;
+
 
 namespace attemptSecondHuffman
 {
     class CSequintialWorkFlow : AWorkFlow
     {
 
-        public CSequintialWorkFlow(AHeapPriority heapPriority, string fileName, AWorkFlow.Scenario scenario,  List<IObservebale> observs)
-            : base(heapPriority, fileName, scenario, observs)
+        public CSequintialWorkFlow(AHeapPriority heapPriority, string fileName, AWorkFlow.Scenario scenario)
+            : base(heapPriority, fileName, scenario)
         {
 
         }
@@ -28,61 +29,38 @@ namespace attemptSecondHuffman
                 m_decompressor = new CSequintialDeCompressor();
             }
         }
-        /**
-         *  заполняем пирамиду 
-         * 
-         * */
-        protected override void fillHeap(ref int[] arr,ref CHeap heap)
+
+        protected override void compress()
         {
-            for (int i = 0; i < 256; ++i)
-            {
-                if (arr[i] != 0)
-                    m_algorithmHeap.minHeapInsert(ref heap, arr[i], i); // вставляем символ и частоту в кучу
-            }
+            Dictionary<int, string> weights = new Dictionary<int, string>();
+            int[] arr = new int[256];
+            m_compressor.readByteByByte(ref m_fileName, ref arr);
+            huffmanAlgorithm.fillHeap(ref arr, ref m_heap);
+            huffmanAlgorithm.huffman(m_heap, ref rootTree);
+            huffmanAlgorithm.fillWeights(rootTree, "", ref weights);
+            rootTree = null;
+            m_compressor.createArchive(ref m_fileName, ref weights, ref m_heap);
         }
 
-        /**
-        *  заполняем вспомогательную таблицу которая сожержит символ и код
-        * 
-        * 
-        * */
-        protected override void fillWeights(CNode node, string res, ref Dictionary<int, string> weights)
+        protected override void deCompress()
         {
-            if (node != null)
+            if (!m_fileName.Contains(".lema"))
             {
-                if (node.left == null && node.right == null)
-                {
-                    weights.Add(node.leaf.symbol, res);
-                }
-                fillWeights(node.left, res + "0", ref weights);
-                fillWeights(node.right, res + "1", ref weights);
+                throw new Exception("Undefined file Format");
             }
-        }
-        /**
-         *  строим дерево Хаффмана. Листы в этом дереве являются наши символы
-         *  а путь до листьев и является кодом этого символа( есил идем влево пишем 0 , вправо 1)
-         * 
-         * */
-        protected override void huffman(CHeap m_heap, ref CNode rootTree)
-        {
-            int n = m_heap.heapSize;
-            CHeap heap = new CHeap(m_heap);
-            int count = 0;
-            for (int i = 0; i <= n - 1; ++i)
-            {
-                CNode left = m_algorithmHeap.heapExtractMin(ref heap);
-                CNode right = m_algorithmHeap.heapExtractMin(ref heap);
-                int freq = left.leaf.frequency + right.leaf.frequency;
-                CNode newNode = new CNode();
-                count++;
-                newNode.left = left;
-                newNode.right = right;
-                newNode.leaf = new CLeaf();
-                newNode.leaf.frequency = freq;
-                m_algorithmHeap.minHeapInsertNode(ref heap, ref newNode);
-                rootTree = newNode;
-            }
-            writer.WriteLine("count == " + count);
+            Dictionary<int, string> weights = new Dictionary<int, string>();
+            m_fileStream = new FileStream(m_fileName, FileMode.Open, FileAccess.Read, FileShare.Read);
+            StreamReader sr = new StreamReader(m_fileStream);
+            m_decompressor.readHeap(ref m_heap, ref sr);
+
+            huffmanAlgorithm.huffman(m_heap, ref rootTree);
+
+            huffmanAlgorithm.fillWeights(rootTree, "", ref weights);
+
+            String outFileName = Helper.getFileNameFromNameArchive(m_fileName);
+            m_decompressor.transformArchiveToFile(ref rootTree, outFileName, ref sr );
+            sr.Close();
+            m_fileStream.Close();
         }
     }
 }

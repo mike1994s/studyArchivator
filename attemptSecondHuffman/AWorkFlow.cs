@@ -16,24 +16,22 @@ namespace attemptSecondHuffman
             Compress,
             DeCompress
         };
+
         protected ICompressor m_compressor;
         protected IDecompressor m_decompressor;
         protected Scenario m_scenario; 
-        private CNode rootTree;
-        private string m_fileName;
+        protected CNode rootTree;
+        protected string m_fileName;
         protected FileStream file1 = new FileStream("test.txt", FileMode.Create); //создаем файловый поток
         protected StreamWriter writer;
-        protected AHeapPriority m_algorithmHeap;
-        private CHeap m_heap = new CHeap();
+        protected CHeap m_heap = new CHeap();
+        protected IHuffman huffmanAlgorithm;
         protected FileStream m_fileStream;
-        private List<IObservebale> m_obs;
-        private List<IObservebale> m_obsToSend;
-        public AWorkFlow(AHeapPriority heapPriority, string fileName, Scenario scenario, List < IObservebale > observs)
+        public AWorkFlow(AHeapPriority heapPriority, string fileName, Scenario scenario)
         {
-            m_obs = observs;
             m_scenario = scenario;
             writer = new StreamWriter(file1); //создаем «потоковый писатель» и связываем его с файловым потоком
-            m_algorithmHeap = heapPriority;
+            huffmanAlgorithm = new CSequintialHuffman(heapPriority);
             m_fileName = fileName;
             for (int i = 0; i < m_heap.nodes.Count(); ++i)
             {
@@ -42,11 +40,6 @@ namespace attemptSecondHuffman
             }
             m_heap.heapSize = -1;
             rootTree = new CNode();
-            m_obsToSend = new List<IObservebale>();
-            for (int i = 1; i < observs.Count(); ++i)
-            {
-                m_obsToSend.Add(observs[i]);
-            }
         }
       
         public AWorkFlow(string fileName)
@@ -72,71 +65,21 @@ namespace attemptSecondHuffman
             }
             writer.Close();  
         }
-
-        private void compress(){
-           Dictionary<int, string> weights = new Dictionary<int, string>();
-            int []arr = new int[256];
-            m_obs[0].onStart(5);
-            m_compressor.readByteByByte(ref m_fileName, ref arr);
-            m_obs[0].onIncrement();
-            fillHeap(ref arr, ref m_heap);
-            m_obs[0].onIncrement();
-            huffman(m_heap, ref rootTree);
-            m_obs[0].onIncrement();
-            fillWeights(rootTree, "", ref weights);
-            m_obs[0].onIncrement();
-            rootTree = null;
-            m_compressor.createArchive(ref m_fileName, ref weights, ref m_heap, ref m_obsToSend);
-            m_obs[0].onFinish();
-        }
+        /// <summary>
+        /// сжимает файл в архив
+        /// </summary>
+        abstract protected void compress();
 
 
-        private void deCompress()
-        {
-            if (!m_fileName.Contains(".lema"))
-            {
-                throw new Exception("Undefined file Format");
-            }
-            Dictionary<int, string> weights = new Dictionary<int, string>();
-            m_fileStream = new FileStream(m_fileName, FileMode.Open, FileAccess.Read, FileShare.Read);
-            StreamReader sr = new StreamReader(m_fileStream);
-            m_decompressor.readHeap(ref m_heap, ref sr);
-            
-            huffman(m_heap, ref rootTree);
+        /// <summary>
+        /// Получает файл из архива
+        /// </summary>
+        abstract protected void deCompress();
 
-            fillWeights(rootTree, "", ref weights);
 
-            String outFileName = Helper.getFileNameFromNameArchive(m_fileName);
-            m_decompressor.transformArchiveToFile(ref rootTree, outFileName, ref sr );
-            sr.Close();
-            m_fileStream.Close();
-        }
         /// <summary>
         /// Метод необходимо вызывать для инициализации сценария то есть разархивируем мы сейчас или архивируем
         /// </summary>
         abstract protected void initScenario();
-
-        /// <summary>
-        /// заполняем пирамиду
-        /// </summary>
-        /// <param name="arr"> массив встреаемости каждого ascii символа</param>
-        /// <param name="heap">пирамида</param>
-        abstract protected void fillHeap(ref int[] arr, ref CHeap heap);
-
-        /// <summary>
-        /// применяем алгоритм Хаффмана, строим здесь дерево из пирамиды
-        /// </summary>
-        /// <param name="m_heap">Пирамида</param>
-        /// <param name="rootTree">указатель на корень дерева</param>
-        abstract protected void huffman(CHeap m_heap, ref CNode rootTree);
-        
-        /// <summary>
-        /// заполняем таблицу, ключ код символ значение соответствующий символу код Хаффмана 
-        /// (по сути просто обхо дерева)
-        /// </summary>
-        /// <param name="node"> узел дерева</param>
-        /// <param name="res"> тут зхранится текущий код</param>
-        /// <param name="weights">словарь с весами</param>
-        abstract protected void fillWeights(CNode node, string res, ref Dictionary<int, string> weights);
     }
 }
