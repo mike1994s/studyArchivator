@@ -81,8 +81,6 @@ namespace attemptSecondHuffman
             int rest = getRestSymbols(ref readerArchive, arr, ref counSymbols);
             int one = readerArchive.BaseStream.ReadByte();
             int cnt = 1;
-            //prBar.Value = 0;
-            //prBar.Maximum = counSymbols;
             while (one != -1)
             {
                 String res = Convert.ToString(one, 2);

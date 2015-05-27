@@ -4,22 +4,27 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.IO;
-using System.Diagnostics;
-using System.Windows.Forms;
-
 namespace attemptSecondHuffman
 {
-    public class CSequintialCompressor : ICompressor
+    public class CParallelCompressor : ICompressor
     {
+        int m_countParts;
+        String m_prefix;
+        public CParallelCompressor(int countParts, String prefix)
+        {
+            m_countParts = countParts;
+            m_prefix = prefix;
+        }
         public void createArchive(String m_fileName, Dictionary<int, string> weights, CHeap m_heap, String newFolder)
         {
-            FileStream archive = new FileStream(m_fileName + Helper.getExtensionArchive(), FileMode.Create); 
+            String onlyNameFile = Path.GetFileName(m_fileName);
+            FileStream archive = new FileStream(newFolder + "\\" + onlyNameFile + Helper.getExtensionArchive(), FileMode.Create);
             StreamWriter writerArchive = new StreamWriter(archive);
             WriteTreeInArchive(ref m_heap, ref writerArchive);
             FileStream m_fileStream = new FileStream(m_fileName, FileMode.Open, FileAccess.Read, FileShare.Read);
             List<String> a = new List<string>();
             int countSymbols = 0;
-            int rest = getCountExtraByte(ref m_fileName, ref weights, a, ref m_fileStream,ref countSymbols);
+            int rest = getCountExtraByte(ref m_fileName, ref weights, a, ref m_fileStream, ref countSymbols);
             writerArchive.BaseStream.WriteByte((byte)rest);
             byte[] bytes = BitConverter.GetBytes(countSymbols);
             writerArchive.BaseStream.Write(bytes, 0, bytes.Length);
@@ -51,7 +56,7 @@ namespace attemptSecondHuffman
             countSymbols++;
             String bufferEightSymbols = String.Empty;
             String restSymbols = String.Empty;
-         
+
             while (one != -1)
             {
                 int sym = one;
@@ -59,7 +64,8 @@ namespace attemptSecondHuffman
                 {
                     String value = restSymbols + weights[sym];
                     restSymbols = String.Empty;
-                    while (value.Length > 7) {
+                    while (value.Length > 7)
+                    {
 
                         getEightSymbols(ref value);
                     }
@@ -137,7 +143,7 @@ namespace attemptSecondHuffman
                     }
                     restSymbols += value;
                 }
-                 one = sr.BaseStream.ReadByte();
+                one = sr.BaseStream.ReadByte();
             }
             if (rest > 0)
             {
@@ -149,7 +155,7 @@ namespace attemptSecondHuffman
                 res = Convert.ToByte(getEightSymbols(ref restSymbols), 2);
                 writerArchive.BaseStream.WriteByte((byte)res);
             }
-         
+
             sr.Close();
             m_fileStream.Close();
         }

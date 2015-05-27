@@ -39,7 +39,7 @@ namespace attemptSecondHuffman
             huffmanAlgorithm.huffman(m_heap, ref rootTree);
             huffmanAlgorithm.fillWeights(rootTree, "", ref weights);
             rootTree = null;
-            m_compressor.createArchive(ref m_fileName, ref weights, ref m_heap);
+            m_compressor.createArchive( m_fileName,  weights, m_heap, "");
         }
 
         protected override void deCompress()

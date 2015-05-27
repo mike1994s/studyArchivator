@@ -82,7 +82,7 @@ namespace attemptSecondHuffman
             {
                 scenario = AWorkFlow.Scenario.DeCompress ;
             }
-            workingFlow = new CSequintialWorkFlow(priority, textBox1.Text.ToString(), scenario);
+            workingFlow = new CParallelWorkflow(priority, textBox1.Text.ToString(), scenario);
             try
             {
                 workingFlow.run();

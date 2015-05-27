@@ -50,6 +50,7 @@
     <Compile Include="CHeap.cs" />
     <Compile Include="CLeaf.cs" />
     <Compile Include="CNode.cs" />
+    <Compile Include="CParallelCompressor.cs" />
     <Compile Include="CParallelWorkflow.cs" />
     <Compile Include="CSequintialCompressor.cs" />
     <Compile Include="CSequintialDeCompressor.cs" />

@@ -40,5 +40,20 @@ namespace attemptSecondHuffman
                str = '0' + str;
            }
        }
+
+       public static String getAffix()
+       {
+           return "_heap_";
+       }
+
+       public static String getExtensionArchive()
+       {
+           return ".lema";
+       }
+
+       public static String getPostFixDirectory()
+       {
+           return "_LEMA";
+       }
     }
 }
