@@ -55,5 +55,15 @@ namespace attemptSecondHuffman
        {
            return "_LEMA";
        }
+
+        public static void initHeap( ref CHeap heap)
+        {
+            for (int i = 0; i < heap.nodes.Count(); ++i)
+            {
+                heap.nodes[i] = new CNode();
+                heap.nodes[i].leaf = new CLeaf();
+            }
+            heap.heapSize = -1;
+        }
     }
 }

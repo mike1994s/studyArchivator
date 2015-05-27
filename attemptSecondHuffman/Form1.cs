@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-
+using System.IO;
 namespace attemptSecondHuffman
 {
     public partial class Form1 : Form
@@ -19,6 +19,8 @@ namespace attemptSecondHuffman
         }
         AWorkFlow workingFlow;
         AHeapPriority priority;
+        AWorkFlow.Scenario scenario = AWorkFlow.Scenario.Compress;
+
         private void button1_Click(object sender, EventArgs e)
         {
             string filePath = "";
@@ -43,8 +45,6 @@ namespace attemptSecondHuffman
                 MessageBox.Show("Выберите файл");
             }
             priority = new CAlgoritmMinHeap();
-            AWorkFlow.Scenario scenario;
-            progressBar1.Maximum = 10;
             if (!textBox1.Text.ToString().Contains(".lema"))
             {
                 scenario = AWorkFlow.Scenario.Compress;
@@ -72,16 +72,8 @@ namespace attemptSecondHuffman
                 MessageBox.Show("Выберите файл");
             }
             priority = new CAlgoritmMinHeap();
-            AWorkFlow.Scenario scenario;
          
-            if (!textBox1.Text.ToString().Contains(".lema"))
-            {
-                scenario = AWorkFlow.Scenario.Compress;
-            }
-            else
-            {
-                scenario = AWorkFlow.Scenario.DeCompress ;
-            }
+
             workingFlow = new CParallelWorkflow(priority, textBox1.Text.ToString(), scenario);
             try
             {
@@ -97,5 +89,19 @@ namespace attemptSecondHuffman
         {
             backgroundWorker1.RunWorkerAsync();
         }
+
+        private void button4_Click(object sender, EventArgs e)
+        {
+            DialogResult result = folderBrowserDialog1.ShowDialog();
+            if (result == DialogResult.OK)
+            {
+                String selPath = folderBrowserDialog1.SelectedPath;
+                scenario = AWorkFlow.Scenario.DeCompress;
+                textBox1.Text = selPath;
+                backgroundWorker1.RunWorkerAsync();
+            }
+        }
+
+        
     }
 }

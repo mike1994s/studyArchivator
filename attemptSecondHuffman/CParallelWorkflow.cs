@@ -82,24 +82,33 @@ namespace attemptSecondHuffman
             }
         }
 
-        protected override void deCompress() {
-            if (!m_fileName.Contains(".lema"))
-            {
-                throw new Exception("Undefined file Format");
-            }
+        private void dearchivate(String file)
+        {
             Dictionary<int, string> weights = new Dictionary<int, string>();
-            m_fileStream = new FileStream(m_fileName, FileMode.Open, FileAccess.Read, FileShare.Read);
-            StreamReader sr = new StreamReader(m_fileStream);
-            m_decompressor.readHeap(ref m_heap, ref sr);
+            FileStream fileStream = new FileStream(file, FileMode.Open, FileAccess.Read, FileShare.Read);
+            StreamReader sr = new StreamReader(fileStream);
+            CHeap heap= new CHeap();
+            Helper.initHeap(ref heap);
+            CNode root = new CNode();
+            m_decompressor.readHeap(ref heap, ref sr);
 
-            huffmanAlgorithm.huffman(m_heap, ref rootTree);
+            huffmanAlgorithm.huffman(m_heap, ref root);
 
             huffmanAlgorithm.fillWeights(rootTree, "", ref weights);
 
-            String outFileName = Helper.getFileNameFromNameArchive(m_fileName);
-            m_decompressor.transformArchiveToFile(ref rootTree, outFileName, ref sr);
+            String outFileName = Helper.getFileNameFromNameArchive(file);
+            m_decompressor.transformArchiveToFile(ref root, outFileName, ref sr);
             sr.Close();
             m_fileStream.Close();
+        }
+        protected override void deCompress() {
+            string[] files = Directory.GetFiles(m_fileName);
+            List<Task> tasks = new List<Task>();
+            foreach (string file in files)
+            {
+                dearchivate(file);
+            }
+           
         }
     }
    

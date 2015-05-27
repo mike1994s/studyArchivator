@@ -33,15 +33,10 @@ namespace attemptSecondHuffman
             writer = new StreamWriter(file1); //создаем «потоковый писатель» и связываем его с файловым потоком
             huffmanAlgorithm = new CSequintialHuffman(heapPriority);
             m_fileName = fileName;
-            for (int i = 0; i < m_heap.nodes.Count(); ++i)
-            {
-                m_heap.nodes[i] = new CNode();
-                m_heap.nodes[i].leaf = new CLeaf();
-            }
-            m_heap.heapSize = -1;
+            Helper.initHeap(ref m_heap);
             rootTree = new CNode();
         }
-      
+        
         public AWorkFlow(string fileName)
         {
             writer  = new StreamWriter(file1); 
@@ -50,7 +45,7 @@ namespace attemptSecondHuffman
 
         public void run()
         {
-            if (!File.Exists(m_fileName))
+            if (!File.Exists(m_fileName) && !Directory.Exists(m_fileName))
             {
                 throw new Exception("File Not Found");
             }
