@@ -55,7 +55,7 @@ namespace attemptSecondHuffman
                 divideFile(4);
             });
             huffmanAlgorithm.fillHeap(ref arr, ref m_heap);
-            huffmanAlgorithm.huffman(m_heap, ref rootTree);
+            huffmanAlgorithm.huffman(ref m_heap, ref rootTree);
             huffmanAlgorithm.fillWeights(rootTree, "", ref weights);
             rootTree = null;
             List<Task> tasks = new List<Task>();
@@ -92,24 +92,65 @@ namespace attemptSecondHuffman
             CNode root = new CNode();
             m_decompressor.readHeap(ref heap, ref sr);
 
-            huffmanAlgorithm.huffman(m_heap, ref root);
+            huffmanAlgorithm.huffman(ref heap, ref root);
 
-            huffmanAlgorithm.fillWeights(rootTree, "", ref weights);
+            huffmanAlgorithm.fillWeights(root, "", ref weights);
 
             String outFileName = Helper.getFileNameFromNameArchive(file);
             m_decompressor.transformArchiveToFile(ref root, outFileName, ref sr);
             sr.Close();
-            m_fileStream.Close();
+            fileStream.Close();
+            File.Delete(file);
         }
+
+        private string getNameParts(string fileName)
+        {
+            String[] arr = fileName.Split('.');
+            String newFileName = String.Empty;
+            for (int i = 0; i < arr.Length - 1; ++i)
+            {
+                if (i == 0)
+                {
+                    newFileName += arr[i];
+                }
+                else
+                {
+                    newFileName += "." + arr[i];
+                }
+            }
+            return newFileName;
+        }
+
+        private String getDearchivateFile(String fileName, int numPart)
+        {
+            String[] fileNames = fileName.Split('0');
+            return fileNames[0];
+        }
+
         protected override void deCompress() {
             string[] files = Directory.GetFiles(m_fileName);
             List<Task> tasks = new List<Task>();
+            List<String> lStrings = new List<string>();
             foreach (string file in files)
             {
-                dearchivate(file);
+                string str = getNameParts(file);
+                lStrings.Add(str);
+                Task task = Task.Factory.StartNew(() =>
+                {
+                    dearchivate(file);
+                });
+                tasks.Add(task);
             }
-           
+            Task.WaitAll(tasks.ToArray());
+            if (lStrings.Count() > 0)
+            {
+               String newFileName =  getDearchivateFile(lStrings[0], 0);
+               Helper.MultipleFilesToSingleFile(lStrings, newFileName);
+                
+            }
+
         }
+         
     }
    
 

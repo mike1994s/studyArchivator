@@ -36,7 +36,7 @@ namespace attemptSecondHuffman
             int[] arr = new int[256];
             m_compressor.readByteByByte(ref m_fileName, ref arr);
             huffmanAlgorithm.fillHeap(ref arr, ref m_heap);
-            huffmanAlgorithm.huffman(m_heap, ref rootTree);
+            huffmanAlgorithm.huffman(ref m_heap, ref rootTree);
             huffmanAlgorithm.fillWeights(rootTree, "", ref weights);
             rootTree = null;
             m_compressor.createArchive( m_fileName,  weights, m_heap, "");
@@ -53,7 +53,7 @@ namespace attemptSecondHuffman
             StreamReader sr = new StreamReader(m_fileStream);
             m_decompressor.readHeap(ref m_heap, ref sr);
 
-            huffmanAlgorithm.huffman(m_heap, ref rootTree);
+            huffmanAlgorithm.huffman(ref m_heap, ref rootTree);
 
             huffmanAlgorithm.fillWeights(rootTree, "", ref weights);
 

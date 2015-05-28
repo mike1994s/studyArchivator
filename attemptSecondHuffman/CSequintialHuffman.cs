@@ -49,7 +49,7 @@ namespace attemptSecondHuffman
          *  а путь до листьев и является кодом этого символа( есил идем влево пишем 0 , вправо 1)
          * 
          * */
-        public void huffman(CHeap m_heap, ref CNode rootTree)
+        public void huffman(ref CHeap m_heap, ref CNode rootTree)
         {
             int n = m_heap.heapSize;
             CHeap heap = new CHeap(m_heap);

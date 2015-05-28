@@ -56,7 +56,9 @@ namespace attemptSecondHuffman
             workingFlow = new CSequintialWorkFlow(priority, textBox1.Text.ToString(), scenario);
             try
             {
-                workingFlow.run();
+               String res =  workingFlow.run();
+               MessageBox.Show(res);
+               this.Text = res;
             }
             catch (Exception error)
             {
@@ -77,7 +79,8 @@ namespace attemptSecondHuffman
             workingFlow = new CParallelWorkflow(priority, textBox1.Text.ToString(), scenario);
             try
             {
-                workingFlow.run();
+                String res = workingFlow.run();
+                this.Text = res;
             }
             catch (Exception error)
             {
@@ -102,6 +105,5 @@ namespace attemptSecondHuffman
             }
         }
 
-        
     }
 }

@@ -70,8 +70,6 @@ namespace attemptSecondHuffman
 
         public void transformArchiveToFile(ref CNode rootTree, String outFileName, ref  StreamReader readerArchive )
         {
-            FileStream file1 = new FileStream("test1.txt", FileMode.Create); //создаем файловый поток
-            StreamWriter writer = new StreamWriter(file1);
             FileStream fileOut = new FileStream(outFileName, FileMode.Create); //создаем файловый поток
             StreamWriter writerArchive = new StreamWriter(fileOut);
             String lines = string.Empty;
@@ -154,6 +152,7 @@ namespace attemptSecondHuffman
             }
             writerArchive.Close();
             fileOut.Close();
+           
         }
     }
 }

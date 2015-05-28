@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.IO;
 
 namespace attemptSecondHuffman
 {
@@ -64,6 +65,19 @@ namespace attemptSecondHuffman
                 heap.nodes[i].leaf = new CLeaf();
             }
             heap.heapSize = -1;
+        }
+
+        public static void MultipleFilesToSingleFile(List<String> files, string destFile)
+        {
+            using (var destStream = File.Create(destFile))
+            {
+                foreach (string filePath in files)
+                {
+                    using (var sourceStream = File.OpenRead(filePath))
+                        sourceStream.CopyTo(destStream); 
+                    File.Delete(filePath);
+                }
+            }
         }
     }
 }

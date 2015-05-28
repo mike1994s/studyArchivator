@@ -43,8 +43,10 @@ namespace attemptSecondHuffman
             m_fileName = fileName;
         }
 
-        public void run()
+        public String run()
         {
+            Stopwatch stopWatch = new Stopwatch();
+            stopWatch.Start();
             if (!File.Exists(m_fileName) && !Directory.Exists(m_fileName))
             {
                 throw new Exception("File Not Found");
@@ -58,7 +60,16 @@ namespace attemptSecondHuffman
             {
                 deCompress();
             }
-            writer.Close();  
+            stopWatch.Stop();
+            // Get the elapsed time as a TimeSpan value.
+            TimeSpan ts = stopWatch.Elapsed;
+
+            // Format and display the TimeSpan value.
+            string elapsedTime = String.Format("{0:00}:{1:00}:{2:00}.{3:00}",
+                ts.Hours, ts.Minutes, ts.Seconds,
+                ts.Milliseconds / 10);
+            writer.Close();
+            return elapsedTime;
         }
         /// <summary>
         /// сжимает файл в архив

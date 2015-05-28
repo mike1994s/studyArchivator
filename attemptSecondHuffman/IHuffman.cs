@@ -21,7 +21,7 @@ namespace attemptSecondHuffman
         /// </summary>
         /// <param name="m_heap">Пирамида</param>
         /// <param name="rootTree">указатель на корень дерева</param>
-        void huffman(CHeap m_heap, ref CNode rootTree);
+        void huffman(ref CHeap m_heap, ref CNode rootTree);
 
         /// <summary>
         /// заполняем таблицу, ключ код символ значение соответствующий символу код Хаффмана 
