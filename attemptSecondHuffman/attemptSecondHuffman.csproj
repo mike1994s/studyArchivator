@@ -67,10 +67,25 @@
     <Compile Include="Helper.cs" />
     <Compile Include="ICompressor.cs" />
     <Compile Include="IHuffman.cs" />
+    <Compile Include="ParallelForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ParallelForm.Designer.cs">
+      <DependentUpon>ParallelForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SequintialForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="SequintialForm.Designer.cs">
+      <DependentUpon>SequintialForm.cs</DependentUpon>
+    </Compile>
     <EmbeddedResource Include="Form1.resx">
       <DependentUpon>Form1.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ParallelForm.resx">
+      <DependentUpon>ParallelForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
@@ -81,6 +96,9 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <EmbeddedResource Include="SequintialForm.resx">
+      <DependentUpon>SequintialForm.cs</DependentUpon>
+    </EmbeddedResource>
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>

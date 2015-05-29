@@ -10,10 +10,13 @@ namespace attemptSecondHuffman
     class CParallelWorkflow : AWorkFlow
     {
         const string ADDITION_NAME = "{0}.part";
-        public CParallelWorkflow(AHeapPriority heapPriority, string fileName, AWorkFlow.Scenario scenario)
+        private ProgressBar prBar;
+        private ParallelForm pF;
+        public CParallelWorkflow(AHeapPriority heapPriority, string fileName, AWorkFlow.Scenario scenario, ref ProgressBar progressBar1,  ParallelForm pForm)
             : base(heapPriority, fileName, scenario)
         {
-
+            prBar = progressBar1;
+            pF = pForm;
         }
         protected override void initScenario()
         {
@@ -49,14 +52,40 @@ namespace attemptSecondHuffman
         protected override void compress() {
             Dictionary<int, string> weights = new Dictionary<int, string>();
             int[] arr = new int[256];
+            pF.Invoke(new Action(() =>
+            {
+                prBar.Maximum = 7;
+                prBar.Value = 0;
+            }));
             m_compressor.readByteByByte(ref m_fileName, ref arr);
+            pF.Invoke(new Action(() =>
+            {
+                prBar.Value ++;
+            }));
             Task taskDivider = Task.Factory.StartNew(() =>
             {
                 divideFile(4);
             });
             huffmanAlgorithm.fillHeap(ref arr, ref m_heap);
+            pF.Invoke(new Action(() =>
+            {
+                prBar.Value++;
+            }));
+
+
             huffmanAlgorithm.huffman(ref m_heap, ref rootTree);
+            pF.Invoke(new Action(() =>
+            {
+                prBar.Value++;
+            }));
+
+
             huffmanAlgorithm.fillWeights(rootTree, "", ref weights);
+            pF.Invoke(new Action(() =>
+            {
+                prBar.Value++;
+            }));
+
             rootTree = null;
             List<Task> tasks = new List<Task>();
             String directoryPath = Path.GetDirectoryName(m_fileName);
@@ -64,6 +93,11 @@ namespace attemptSecondHuffman
             string newDirectory = directoryPath + onlyNameFile + Helper.getPostFixDirectory();
             Directory.CreateDirectory(@newDirectory);
             taskDivider.Wait();
+            pF.Invoke(new Action(() =>
+            {
+                prBar.Value++;
+            }));
+
             for (int i = 0; i < 4; ++i)
             {
                 String file = m_fileName;
@@ -75,11 +109,20 @@ namespace attemptSecondHuffman
                 tasks.Add(task);
             }
             Task.WaitAll(tasks.ToArray());
+            pF.Invoke(new Action(() =>
+            {
+                prBar.Value++;
+            }));
+
             for (int i = 0; i < 4; ++i)
             {
                 String fileName = string.Format(m_fileName + ADDITION_NAME, i);
                 File.Delete(fileName);
             }
+            pF.Invoke(new Action(() =>
+            {
+                prBar.Value = prBar.Maximum;
+            }));
         }
 
         private void dearchivate(String file)
@@ -88,16 +131,24 @@ namespace attemptSecondHuffman
             FileStream fileStream = new FileStream(file, FileMode.Open, FileAccess.Read, FileShare.Read);
             StreamReader sr = new StreamReader(fileStream);
             CHeap heap= new CHeap();
+          
             Helper.initHeap(ref heap);
+        
             CNode root = new CNode();
             m_decompressor.readHeap(ref heap, ref sr);
+           
 
             huffmanAlgorithm.huffman(ref heap, ref root);
+          
 
             huffmanAlgorithm.fillWeights(root, "", ref weights);
+           
 
             String outFileName = Helper.getFileNameFromNameArchive(file);
+         
+
             m_decompressor.transformArchiveToFile(ref root, outFileName, ref sr);
+         
             sr.Close();
             fileStream.Close();
             File.Delete(file);
@@ -131,6 +182,11 @@ namespace attemptSecondHuffman
             string[] files = Directory.GetFiles(m_fileName);
             List<Task> tasks = new List<Task>();
             List<String> lStrings = new List<string>();
+            pF.Invoke(new Action(() =>
+            {
+                prBar.Maximum = 2;
+                prBar.Value = 0;
+            }));
             foreach (string file in files)
             {
                 string str = getNameParts(file);
@@ -142,12 +198,19 @@ namespace attemptSecondHuffman
                 tasks.Add(task);
             }
             Task.WaitAll(tasks.ToArray());
+            pF.Invoke(new Action(() =>
+            {
+                prBar.Value ++;
+            }));
             if (lStrings.Count() > 0)
             {
                String newFileName =  getDearchivateFile(lStrings[0], 0);
                Helper.MultipleFilesToSingleFile(lStrings, newFileName);
-                
             }
+            pF.Invoke(new Action(() =>
+            {
+                prBar.Value = prBar.Maximum;
+            }));
 
         }
          
