@@ -13,6 +13,7 @@ namespace attemptSecondHuffman
     {
         public void createArchive(String m_fileName, Dictionary<int, string> weights, CHeap m_heap, String newFolder)
         {
+            string oldName = m_fileName;
             FileStream archive = new FileStream(m_fileName + Helper.getExtensionArchive(), FileMode.Create); 
             StreamWriter writerArchive = new StreamWriter(archive);
             WriteTreeInArchive(ref m_heap, ref writerArchive);
@@ -24,6 +25,7 @@ namespace attemptSecondHuffman
             byte[] bytes = BitConverter.GetBytes(countSymbols);
             writerArchive.BaseStream.Write(bytes, 0, bytes.Length);
             transform(ref m_fileName, ref weights, ref writerArchive, rest);
+
             writerArchive.Close();
             archive.Close();
         }

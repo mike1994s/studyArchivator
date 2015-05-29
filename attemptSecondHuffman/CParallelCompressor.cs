@@ -66,7 +66,6 @@ namespace attemptSecondHuffman
                     restSymbols = String.Empty;
                     while (value.Length > 7)
                     {
-
                         getEightSymbols(ref value);
                     }
                     restSymbols += value;

@@ -13,10 +13,12 @@ namespace attemptSecondHuffman
     class CSequintialWorkFlow : AWorkFlow
     {
         private ProgressBar prBar;
-        public CSequintialWorkFlow(AHeapPriority heapPriority, string fileName, AWorkFlow.Scenario scenario, ref ProgressBar progressBar1)
+        private SequintialForm m_sf;
+        public CSequintialWorkFlow(AHeapPriority heapPriority, string fileName, AWorkFlow.Scenario scenario, ref ProgressBar progressBar1, SequintialForm fs)
             : base(heapPriority, fileName, scenario)
         {
             prBar = progressBar1;
+            m_sf = fs;
         }
         protected override void initScenario()
         {
@@ -51,7 +53,9 @@ namespace attemptSecondHuffman
             prBar.Value++;
 
             rootTree = null;
+       
             m_compressor.createArchive( m_fileName,  weights, m_heap, "");
+           
             prBar.Value = prBar.Maximum;
         }
 

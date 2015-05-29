@@ -15,6 +15,7 @@ namespace attemptSecondHuffman
         AWorkFlow workingFlow;
         AHeapPriority priority;
         AWorkFlow.Scenario scenario = AWorkFlow.Scenario.Compress;
+
         public SequintialForm()
         {
             InitializeComponent();
@@ -35,7 +36,10 @@ namespace attemptSecondHuffman
             }
             
         }
-
+        public void setTime(String str)
+        {
+            textBox2.Text = str;
+        }
         private void button2_Click(object sender, EventArgs e)
         {
             if (String.IsNullOrEmpty(textBox1.Text.ToString()) ||
@@ -53,7 +57,7 @@ namespace attemptSecondHuffman
             {
                 scenario = AWorkFlow.Scenario.DeCompress;
             }
-            workingFlow = new CSequintialWorkFlow(priority, textBox1.Text.ToString(), scenario, ref progressBar1);
+            workingFlow = new CSequintialWorkFlow(priority, textBox1.Text.ToString(), scenario, ref progressBar1, this);
             try
             {
                 String res = workingFlow.run();

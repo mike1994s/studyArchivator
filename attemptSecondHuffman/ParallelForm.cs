@@ -48,6 +48,22 @@ namespace attemptSecondHuffman
             }
         }
 
+        public void setTime(String str)
+        {
+            textBox2.Text = str;
+        }
+
+        public void setTime2(String str)
+        {
+            textBox3.Text = str;
+        }
+
+        public void setTime3(String str)
+        {
+            textBox4.Text = str;
+        }
+
+      
         private void button2_Click(object sender, EventArgs e)
         {
             if (String.IsNullOrEmpty(textBox1.Text.ToString()) ||

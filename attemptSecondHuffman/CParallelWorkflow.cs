@@ -5,10 +5,12 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.IO;
+using System.Diagnostics;
 namespace attemptSecondHuffman
 {
     class CParallelWorkflow : AWorkFlow
     {
+        const int COUNT_THREADS = 4;
         const string ADDITION_NAME = "{0}.part";
         private ProgressBar prBar;
         private ParallelForm pF;
@@ -49,6 +51,15 @@ namespace attemptSecondHuffman
                 }
             }
         }
+
+        private string helperMethod(string fileName)
+        {
+            String directoryPath = Path.GetDirectoryName(m_fileName);
+            String onlyNameFile = Path.GetFileName(m_fileName);
+            string newDirectory = directoryPath + onlyNameFile + Helper.getPostFixDirectory();
+            Directory.CreateDirectory(@newDirectory);
+            return newDirectory;
+        }
         protected override void compress() {
             Dictionary<int, string> weights = new Dictionary<int, string>();
             int[] arr = new int[256];
@@ -62,9 +73,13 @@ namespace attemptSecondHuffman
             {
                 prBar.Value ++;
             }));
+            Task<String> helperTask = Task.Factory.StartNew(() =>
+            {
+                return helperMethod(m_fileName);
+            });
             Task taskDivider = Task.Factory.StartNew(() =>
             {
-                divideFile(4);
+                divideFile(COUNT_THREADS);
             });
             huffmanAlgorithm.fillHeap(ref arr, ref m_heap);
             pF.Invoke(new Action(() =>
@@ -85,20 +100,16 @@ namespace attemptSecondHuffman
             {
                 prBar.Value++;
             }));
-
             rootTree = null;
             List<Task> tasks = new List<Task>();
-            String directoryPath = Path.GetDirectoryName(m_fileName);
-            String onlyNameFile = Path.GetFileName(m_fileName);
-            string newDirectory = directoryPath + onlyNameFile + Helper.getPostFixDirectory();
-            Directory.CreateDirectory(@newDirectory);
+           
             taskDivider.Wait();
             pF.Invoke(new Action(() =>
             {
                 prBar.Value++;
             }));
-
-            for (int i = 0; i < 4; ++i)
+            string newDirectory = helperTask.Result;
+            for (int i = 0; i < COUNT_THREADS; ++i)
             {
                 String file = m_fileName;
                 String fileName = string.Format(file + ADDITION_NAME, i);
@@ -109,6 +120,8 @@ namespace attemptSecondHuffman
                 tasks.Add(task);
             }
             Task.WaitAll(tasks.ToArray());
+
+
             pF.Invoke(new Action(() =>
             {
                 prBar.Value++;
@@ -187,6 +200,7 @@ namespace attemptSecondHuffman
                 prBar.Maximum = 2;
                 prBar.Value = 0;
             }));
+
             foreach (string file in files)
             {
                 string str = getNameParts(file);
